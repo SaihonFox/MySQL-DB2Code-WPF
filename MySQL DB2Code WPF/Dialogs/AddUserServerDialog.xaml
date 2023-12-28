@@ -1,0 +1,23 @@
+﻿<Window x:Class="MySQL_DB2Code_WPF.Dialogs.AddUserServerDialog"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+        xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+        xmlns:local="clr-namespace:MySQL_DB2Code_WPF.Dialogs"
+        xmlns:ui="http://schemas.modernwpf.com/2019"
+        ui:WindowHelper.UseModernWindowStyle="True"
+        mc:Ignorable="d"
+        ResizeMode="CanMinimize"
+        WindowStartupLocation="CenterScreen"
+        Height="250" Width="400">
+	<Grid>
+		<Label Content="Имя" Margin="10" Padding="0" FontSize="20" FontWeight="SemiBold" VerticalContentAlignment="Center" HorizontalAlignment="Left" VerticalAlignment="Top" Height="40" Width="70" />
+		<TextBox Name="user_tb" Margin="90,10,10,0" Padding="5,0" FontSize="20" FontWeight="SemiBold" VerticalContentAlignment="Center" HorizontalAlignment="Stretch" VerticalAlignment="Top" Height="40" />
+		<Label Content="Сервер" Margin="10,55,0,0" Padding="0" FontSize="20" FontWeight="SemiBold" VerticalContentAlignment="Center" HorizontalAlignment="Left" VerticalAlignment="Top" Height="40" Width="70" />
+		<TextBox Name="server_tb" Margin="90,55,10,0" Padding="5,0" FontSize="20" FontWeight="SemiBold" VerticalContentAlignment="Center" HorizontalAlignment="Stretch" VerticalAlignment="Top" Height="40" />
+		<Label Content="Пароль" Margin="10,100,0,0" Padding="0" FontSize="20" FontWeight="SemiBold" VerticalContentAlignment="Center" HorizontalAlignment="Left" VerticalAlignment="Top" Height="40" Width="70" />
+		<TextBox Name="password_tb" Margin="90,100,10,0" Padding="5,0" FontSize="20" FontWeight="SemiBold" VerticalContentAlignment="Center" HorizontalAlignment="Stretch" VerticalAlignment="Top" Height="40" />
+		
+		<Button Name="add_btn" Content="Добавить" Margin="0,0,10,10" Padding="0" FontSize="20" FontWeight="SemiBold" HorizontalAlignment="Right" VerticalAlignment="Bottom" Width="100" Click="add_btn_Click" />
+	</Grid>
+</Window>

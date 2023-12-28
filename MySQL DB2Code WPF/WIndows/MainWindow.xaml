@@ -1,0 +1,63 @@
+﻿<Window x:Class="MySQL_DB2Code_WPF.Windows.MainWindow"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+        xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+        xmlns:local="clr-namespace:MySQL_DB2Code_WPF"
+        xmlns:ui="http://schemas.modernwpf.com/2019"
+        ui:WindowHelper.UseModernWindowStyle="True"
+        mc:Ignorable="d"
+        WindowStartupLocation="CenterScreen"
+        Height="500" Width="1000">
+	<Window.Resources>
+		<Style x:Key="CenterGridHeaderStyle" TargetType="DataGridColumnHeader">
+			<Setter Property="HorizontalContentAlignment" Value="Center"/>
+		</Style>
+	</Window.Resources>
+	<Grid>
+		<Grid Margin="10,10,0,45" HorizontalAlignment="Left" Width="170">
+			<Grid.RowDefinitions>
+				<RowDefinition Height="Auto" />
+				<RowDefinition />
+			</Grid.RowDefinitions>
+			<Label Grid.Row="0" Content="Список БД" Padding="2.5,0" FontSize="12" FontWeight="SemiBold" VerticalContentAlignment="Center" />
+			<ListBox Grid.Row="1" Name="dblist_lb" d:ItemsSource="{d:SampleData ItemCount=5}" SelectionChanged="dblist_lb_SelectionChanged">
+				<ListBox.ContextMenu>
+					<ContextMenu>
+						<Button Content="Добавить" Name="add_db_ctx_btn" Background="Transparent" VerticalAlignment="Center" HorizontalAlignment="Center" />
+						<Button Content="Удалить" Name="drop_db_ctx_btn" Background="Transparent" VerticalAlignment="Center" HorizontalAlignment="Center" />
+						<Button Content="Экспорт" Name="export_db_ctx_btn" Background="Transparent" VerticalAlignment="Center" HorizontalAlignment="Center" Click="export_db_ctx_btn_Click" />
+					</ContextMenu>
+				</ListBox.ContextMenu>
+			</ListBox>
+		</Grid>
+		<TextBox Name="tablename_tb" Margin="190,5,220,0" BorderThickness="0" IsReadOnly="True" FontSize="20" FontWeight="Bold" VerticalContentAlignment="Center" HorizontalContentAlignment="Center" VerticalAlignment="Top" />
+		<ListView Name="tablecolumns_lv" DataContext="{Binding }" Margin="190,50,220,45" />
+		<Grid Margin="0,10,10,45" HorizontalAlignment="Right" Width="200">
+			<Grid.RowDefinitions>
+				<RowDefinition Height="Auto" />
+				<RowDefinition />
+			</Grid.RowDefinitions>
+
+			<Label Grid.Row="0" Content="Список таблиц" Padding="2.5,0" FontSize="12" FontWeight="SemiBold" VerticalContentAlignment="Center" />
+			<ListBox Grid.Row="1" Name="tablelist_lb" d:ItemsSource="{d:SampleData ItemCount=5}" SelectionChanged="tablelist_lb_SelectionChanged">
+				<ListBox.ContextMenu>
+					<ContextMenu>
+						<Button Content="Добавить" Name="add_table_ctx_btn" Background="Transparent" VerticalAlignment="Stretch" HorizontalAlignment="Stretch" />
+						<Button Content="Удалить" Name="drop_table_ctx_btn" Background="Transparent" VerticalAlignment="Stretch" HorizontalAlignment="Stretch" />
+						<Button Content="Экспорт" Name="export_table_ctx_btn" Background="Transparent" VerticalAlignment="Center" HorizontalAlignment="Center" Click="export_table_ctx_btn_Click" />
+					</ContextMenu>
+				</ListBox.ContextMenu>
+			</ListBox>
+		</Grid>
+
+		<ComboBox Name="user0server_cb" SelectedIndex="0" Margin="0,0,10,10" Padding="5,0,0,0" VerticalContentAlignment="Center" HorizontalAlignment="Right" VerticalAlignment="Bottom" Width="200" Height="{Binding Path=ActualHeight, ElementName=add_user0server_btn}" SelectionChanged="user0server_cb_SelectionChanged" />
+		<Button Name="add_user0server_btn" Content="Добавить" Margin="0,0,220,10" Padding="0" FontSize="16" FontWeight="SemiBold" VerticalContentAlignment="Center" HorizontalAlignment="Right" VerticalAlignment="Bottom" Width="80" Click="add_user0server_btn_Click" />
+
+		<Button Name="update_btn" Content="Обновить" Margin="10,0,0,10" Padding="5,0" FontSize="16" FontWeight="SemiBold" VerticalContentAlignment="Center" HorizontalAlignment="Left" VerticalAlignment="Bottom" Click="update_btn_Click" />
+
+		<TextBox Name="search_tb" HorizontalAlignment="Left" Margin="110,0,0,10" Padding="5,0" FontSize="13" VerticalContentAlignment="Center" VerticalAlignment="Bottom" MinHeight="0" Height="{Binding Path=ActualHeight, ElementName=add_user0server_btn}" Width="200" TextChanged="search_tb_TextChanged" />
+		<ComboBox Name="sort_by_column_cb" Margin="320,0,0,10" Padding="5,0" VerticalContentAlignment="Center" VerticalAlignment="Bottom" Height="{Binding Path=ActualHeight, ElementName=add_user0server_btn}" Width="120" />
+
+	</Grid>
+</Window>
