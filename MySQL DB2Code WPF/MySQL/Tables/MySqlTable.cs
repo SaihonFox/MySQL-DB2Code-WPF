@@ -171,7 +171,6 @@ class MySqlTable
 
 	    for (int i = 0; i < columns.Count; i++)
 	    {
-			//sb.Append($"\t`{columns[i]}` {types[i]}({column_schema[i].ColumnSize})");
 			sb.Append($"\t`{columns[i]}` {GetColumnType(types[i], column_schema[i])}");
 
 			sb.Append(keys.FirstOrDefault(key => key.Column_name!.Equals(columns[i]))?.Key_name == "PRIMARY" ? " primary key" : "");
@@ -208,7 +207,6 @@ class MySqlTable
 			    if (type == typeof(byte[]))
 			    {
 				    var dialog = new OpenFolderDialog();
-				    //var dialog = new SaveFileDialog() { Filter = "Все файлы(*.*)|*.*" };
 				    if (save_byteA2folder != null)
 				    {
 					    line += $"load_file(\"{save_byteA2folder}/{connection.Database}_{table}_{icolumn}.png\")";
@@ -222,11 +220,6 @@ class MySqlTable
 						line += $"load_file(\"{save_byteA2folder}/{connection.Database}_{table}_{icolumn}.png\")";
 
 					    await File.WriteAllBytesAsync($"{save_byteA2folder}/{connection.Database}_{table}_{icolumn}.png", (byte[])reader.GetValue(i));
-
-						//line += $"load_file(\"{dialog.FileName}\")";
-						//$"'{Encoding.Default.GetString((byte[]) reader.GetValue(i))}'";
-
-						//await File.WriteAllBytesAsync(dialog.FileName, (byte[])reader.GetValue(i));
 					}
 
 				    icolumn++;
@@ -234,6 +227,17 @@ class MySqlTable
 			    }
 			    else if(type == typeof(string) || type == typeof(char))
 				    line += $"\"{reader.GetString(i)}\"";
+				else if (type == typeof(DateOnly) || type == typeof(DateTime) || type == typeof(TimeOnly))
+				{
+					if (types[i] == "date")
+						line += $"\"{DateOnly.FromDateTime(reader.GetDateTime(i))}\"";
+					else if (types[i] == "time")
+						line += $"\"{TimeOnly.FromDateTime(reader.GetDateTime(i))}\"";
+					else if (types[i] == "datetime")
+						line += $"\"{reader.GetDateTime(i)}\"";
+					else
+						line += $"\"{reader.GetValue(i)}\"";
+				}
 				else
 				    line += reader.GetValue(i);
 			    line += i == reader.FieldCount - 1 ? string.Empty : ", ";
