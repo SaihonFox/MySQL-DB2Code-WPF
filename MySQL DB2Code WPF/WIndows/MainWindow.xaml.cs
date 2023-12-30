@@ -198,20 +198,4 @@ public partial class MainWindow : Window
 	[GeneratedRegex("[A-Za-z]+@[A-Za-z]+\\|[A-Za-z0-9]+", RegexOptions.IgnoreCase)]
 	public partial Regex MyRegex();
 	#endregion
-
-	public async void search_tb_TextChanged(object sender, TextChangedEventArgs e)
-	{
-		if(string.IsNullOrEmpty(search_tb.Text))
-		{
-			await m.SetTableList();
-			return;
-		}
-
-		var dv = (DataView)tablecolumns_lv.ItemsSource;
-
-		if(dv == null)
-			return;
-
-		tablecolumns_lv.ItemsSource = dv.Table.Rows.OfType<DataRow>().Where(dr => dr.ItemArray.Any(obj => obj.ToString().Equals(search_tb.Text, StringComparison.InvariantCultureIgnoreCase)));
-	}
 }

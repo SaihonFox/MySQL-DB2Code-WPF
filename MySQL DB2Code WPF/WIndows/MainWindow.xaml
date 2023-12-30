@@ -55,9 +55,5 @@
 		<Button Name="add_user0server_btn" Content="Добавить" Margin="0,0,220,10" Padding="0" FontSize="16" FontWeight="SemiBold" VerticalContentAlignment="Center" HorizontalAlignment="Right" VerticalAlignment="Bottom" Width="80" Click="add_user0server_btn_Click" />
 
 		<Button Name="update_btn" Content="Обновить" Margin="10,0,0,10" Padding="5,0" FontSize="16" FontWeight="SemiBold" VerticalContentAlignment="Center" HorizontalAlignment="Left" VerticalAlignment="Bottom" Click="update_btn_Click" />
-
-		<TextBox Name="search_tb" HorizontalAlignment="Left" Margin="110,0,0,10" Padding="5,0" FontSize="13" VerticalContentAlignment="Center" VerticalAlignment="Bottom" MinHeight="0" Height="{Binding Path=ActualHeight, ElementName=add_user0server_btn}" Width="200" TextChanged="search_tb_TextChanged" />
-		<ComboBox Name="sort_by_column_cb" Margin="320,0,0,10" Padding="5,0" VerticalContentAlignment="Center" VerticalAlignment="Bottom" Height="{Binding Path=ActualHeight, ElementName=add_user0server_btn}" Width="120" />
-
 	</Grid>
 </Window>
