@@ -157,9 +157,17 @@ public partial class MainWindow : Window
 		{
 			var text = $"""
 			            create database if not exists `{connection?.Database}`;
-			            use `{connection?.Database}`;
+			            use `{connection?.Database}\n\n`;
 			            """;
-			await File.WriteAllTextAsync(dialog.FileName, text);
+
+			var sb = new StringBuilder(text);
+			foreach (var table in await MySqlDB.GetTables(connection!))
+			{
+				sb.AppendLine(await MySqlTable.ExportTable(connection, table));
+			}
+
+			await File.WriteAllTextAsync(dialog.FileName, sb.ToString());
+			MessageBox.Show("Успешно экспортировано");
 		}
 	}
 
@@ -180,85 +188,9 @@ public partial class MainWindow : Window
 		            """;
 		var sb = new StringBuilder(text);
 		sb.Append(await MySqlTable.ExportTable(connection, table));
-		/*if (await MySqlTable.ContainsColumns(connection, table))
-		{
-			var types = new List<string>();
-
-			await using var command = connection!.CreateCommand();
-			command.CommandText = $"select * from `{connection.Database}`.`{table}`";
-			await using var reader = await command.ExecuteReaderAsync();
-			var schema = await reader.GetSchemaTableAsync();
-			var columns = new ReadOnlyCollection<DbColumn>(await reader.GetColumnSchemaAsync());
-
-			for (var i = 0; i < schema!.Rows.Count; i++)
-				types.Add(reader.GetDataTypeName(i).ToLower());
-			await reader.CloseAsync();
-
-			//---------------------------------------------
-			var keys = new Dictionary<string, string>();
-			await using var command2 = connection!.CreateCommand();
-			command2.CommandText = $"show keys from `{connection.Database}`.`{table}`";
-			await using var reader2 = await command2.ExecuteReaderAsync();
-			while (await reader2.ReadAsync())
-				keys.Add(reader2["Column_name"].ToString()!, reader2["Key_name"].ToString()!);
-			await reader2.CloseAsync();
-
-			//---------------------------------------------
-			var constraints = new Dictionary<string, List<string>>();
-			await using var command3 = connection!.CreateCommand();
-			command3.CommandText =
-				$"select * from information_schema.key_column_usage where constraint_schema = '{connection.Database}' and table_name = '{table}'";
-			await using var reader3 = await command3.ExecuteReaderAsync();
-			while (await reader3.ReadAsync())
-			{
-				var i = 0;
-				if (i++ >= reader3.FieldCount)
-					continue;
-
-				if (!string.IsNullOrEmpty(reader3["REFERENCED_TABLE_SCHEMA"].ToString()))
-					constraints.Add(reader3["COLUMN_NAME"].ToString()!,
-					[
-						reader3["REFERENCED_TABLE_NAME"].ToString()!,
-						reader3["REFERENCED_COLUMN_NAME"].ToString()
-					]);
-			}
-
-			//---------------------------------------------
-			sb.Append("(\n");
-			for (var i = 0; i < schema!.Rows.Count; i++)
-			{
-				var row = schema.Rows[i];
-				*//*text += $"\t`{row[0]}` {types[i]}({columns[i].ColumnSize!.Value})";
-				text += keys.Count(key => key.Key.Equals(row[0]) && key.Value.Equals("PRIMARY")) > 0 ? " primary key" : "";
-				text += columns[i].IsAutoIncrement!.Value ? " auto_increment" : "";
-				text += columns[i].AllowDBNull!.Value ? "" : " not null";
-				text += (i == schema.Rows.Count - 1) && (constraints.Count == 0) ? "" : ",";
-				text += "\n";*//*
-				sb.Append($"\t`{row[0]}` {types[i]}({columns[i].ColumnSize!.Value})");
-				sb.Append(keys.Any(key => key.Key.Equals(row[0]) && key.Value.Equals("PRIMARY"))
-					? " primary key"
-					: "");
-				sb.Append(columns[i].IsAutoIncrement!.Value ? " auto_increment" : "");
-				sb.Append(columns[i].AllowDBNull!.Value ? "" : " not null");
-				sb.Append((i == schema.Rows.Count - 1) && (constraints.Count == 0) ? "" : ",");
-				sb.Append('\n');
-			}
-
-			if (constraints.Count > 0)
-				sb.Append('\n');
-			sb.Append(string.Join(",\n",
-				constraints.Select(constraint =>
-					$"\tforeign key ({constraint.Key}) references {constraint.Value[0]}({constraint.Value[1]})")));
-			if(constraints.Count > 0)
-				sb.Append('\n');
-
-			sb.Append(");\n");
-
-		}
-		else
-			sb.Append(';');*/
 
 		await File.WriteAllTextAsync(dialog.FileName, sb.ToString());
+		MessageBox.Show("Успешно экспортировано");
 	}
 	#endregion
 
