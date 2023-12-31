@@ -163,7 +163,7 @@ public partial class MainWindow : Window
 			var sb = new StringBuilder(text);
 			foreach (var table in await MySqlDB.GetTables(connection!))
 			{
-				sb.AppendLine(await MySqlTable.ExportTable(connection, table));
+				sb.AppendLine(await MySqlTable.ExportTable(connection!, table));
 			}
 
 			await File.WriteAllTextAsync(dialog.FileName, sb.ToString());

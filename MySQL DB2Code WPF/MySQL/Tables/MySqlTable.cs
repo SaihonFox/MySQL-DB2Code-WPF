@@ -208,18 +208,25 @@ class MySqlTable
 			    {
 				    var dialog = new OpenFolderDialog();
 				    if (save_byteA2folder != null)
-				    {
-					    line += $"load_file(\"{save_byteA2folder}/{connection.Database}_{table}_{icolumn}.png\")";
+					{
 
-					    await File.WriteAllBytesAsync($"{save_byteA2folder}/{connection.Database}_{table}_{icolumn}.png", (byte[])reader.GetValue(i));
+						if (!Directory.Exists($"{save_byteA2folder}/table/"))
+							Directory.CreateDirectory($"{save_byteA2folder}/{table}/");
+
+						line += $"load_file(\"{save_byteA2folder}/{table}/{icolumn}.png\")";
+
+					    await File.WriteAllBytesAsync($"{save_byteA2folder}/{table}/{icolumn + 1}.png", (byte[])reader.GetValue(i));
 					}
 					else if (dialog.ShowDialog()!.Value)
 					{
 						save_byteA2folder = dialog.FolderName;
 
-						line += $"load_file(\"{save_byteA2folder}/{connection.Database}_{table}_{icolumn}.png\")";
+						if (!Directory.Exists($"{save_byteA2folder}/table/"))
+							Directory.CreateDirectory($"{save_byteA2folder}/{table}/");
 
-					    await File.WriteAllBytesAsync($"{save_byteA2folder}/{connection.Database}_{table}_{icolumn}.png", (byte[])reader.GetValue(i));
+						line += $"load_file(\"{save_byteA2folder}/{table}/{icolumn + 1}.png\")";
+
+					    await File.WriteAllBytesAsync($"{save_byteA2folder}/{table}/{icolumn + 1}.png", (byte[])reader.GetValue(i));
 					}
 
 				    icolumn++;
