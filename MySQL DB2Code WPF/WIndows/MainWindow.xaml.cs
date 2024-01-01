@@ -151,7 +151,8 @@ public partial class MainWindow : Window
 	{
 		if(dblist_lb.SelectedIndex == -1)
 			return;
-		
+
+		MySqlTable.save_byteA2folder = null;
 		var dialog = new SaveFileDialog() { Filter = "SQL File(*.sql)|*.sql"};
 		if (dialog.ShowDialog()!.Value)
 		{
@@ -176,6 +177,7 @@ public partial class MainWindow : Window
 		if (tablelist_lb.SelectedIndex == -1)
 			return;
 
+		MySqlTable.save_byteA2folder = null;
 		var dialog = new SaveFileDialog() { Filter = "SQL File(*.sql)|*.sql" };
 		if (!dialog.ShowDialog()!.Value) return;
 

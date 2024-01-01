@@ -155,7 +155,7 @@ class MySqlTable
 		return ret;
 	}
 
-    private static string? save_byteA2folder = null;
+    public static string? save_byteA2folder = null;
 
     public static async Task<string> ExportTable(MySqlConnection connection, string table)
     {
@@ -226,7 +226,8 @@ class MySqlTable
 
 						line += $"load_file(\"{save_byteA2folder}/{table}/{icolumn + 1}.png\")";
 
-					    await File.WriteAllBytesAsync($"{save_byteA2folder}/{table}/{icolumn + 1}.png", (byte[])reader.GetValue(i));
+						if(reader.GetValue(i) != DBNull.Value)
+							await File.WriteAllBytesAsync($"{save_byteA2folder}/{table}/{icolumn + 1}.png", (byte[])reader.GetValue(i));
 					}
 
 				    icolumn++;
