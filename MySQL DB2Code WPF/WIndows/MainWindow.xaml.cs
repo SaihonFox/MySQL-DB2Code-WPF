@@ -158,7 +158,9 @@ public partial class MainWindow : Window
 		{
 			var text = $"""
 			            create database if not exists `{connection?.Database}`;
-			            use `{connection?.Database}\n\n`;
+			            use `{connection?.Database}`;
+
+
 			            """;
 
 			var sb = new StringBuilder(text);

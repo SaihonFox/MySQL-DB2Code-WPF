@@ -9,7 +9,6 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using System.Windows;
-using System.Windows.Controls;
 using System.Windows.Input;
 using Microsoft.Win32;
 using MySql.Data.MySqlClient;
@@ -213,9 +212,14 @@ class MySqlTable
 						if (!Directory.Exists($"{save_byteA2folder}/table/"))
 							Directory.CreateDirectory($"{save_byteA2folder}/{table}/");
 
-						line += $"load_file(\"{save_byteA2folder}/{table}/{icolumn}.png\")";
+						var mime = FileType.GetMimeFromBytes((byte[])reader.GetValue(i), "image/png");
 
-					    await File.WriteAllBytesAsync($"{save_byteA2folder}/{table}/{icolumn + 1}.png", (byte[])reader.GetValue(i));
+						if (ext == "x-png")
+							ext = "png";
+						var ext = NormalFileType(mime.Split("/")[1]);
+
+						line += $"load_file(\"{save_byteA2folder}/{table}/{icolumn}.{ext}\")";
+						await File.WriteAllBytesAsync($"{save_byteA2folder}/{table}/{icolumn + 1}.{ext}", (byte[])reader.GetValue(i));
 					}
 					else if (dialog.ShowDialog()!.Value)
 					{
@@ -268,4 +272,14 @@ class MySqlTable
 
 	    return type;
     }
+
+	static string NormalFileType(string type)
+	{
+		return type switch
+		{
+			"x-png" => "png",
+			"pjpeg" => "jpeg",
+			_ => type
+		};
+	}
 }

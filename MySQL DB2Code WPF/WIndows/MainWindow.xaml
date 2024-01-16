@@ -24,7 +24,6 @@
 			<ListBox Grid.Row="1" Name="dblist_lb" d:ItemsSource="{d:SampleData ItemCount=5}" SelectionChanged="dblist_lb_SelectionChanged">
 				<ListBox.ContextMenu>
 					<ContextMenu>
-						<Button Content="Добавить" Name="add_db_ctx_btn" Background="Transparent" VerticalAlignment="Center" HorizontalAlignment="Center" />
 						<Button Content="Удалить" Name="drop_db_ctx_btn" Background="Transparent" VerticalAlignment="Center" HorizontalAlignment="Center" />
 						<Button Content="Экспорт" Name="export_db_ctx_btn" Background="Transparent" VerticalAlignment="Center" HorizontalAlignment="Center" Click="export_db_ctx_btn_Click" />
 					</ContextMenu>
@@ -43,7 +42,6 @@
 			<ListBox Grid.Row="1" Name="tablelist_lb" d:ItemsSource="{d:SampleData ItemCount=5}" SelectionChanged="tablelist_lb_SelectionChanged">
 				<ListBox.ContextMenu>
 					<ContextMenu>
-						<Button Content="Добавить" Name="add_table_ctx_btn" Background="Transparent" VerticalAlignment="Stretch" HorizontalAlignment="Stretch" />
 						<Button Content="Удалить" Name="drop_table_ctx_btn" Background="Transparent" VerticalAlignment="Stretch" HorizontalAlignment="Stretch" />
 						<Button Content="Экспорт" Name="export_table_ctx_btn" Background="Transparent" VerticalAlignment="Center" HorizontalAlignment="Center" Click="export_table_ctx_btn_Click" />
 					</ContextMenu>
