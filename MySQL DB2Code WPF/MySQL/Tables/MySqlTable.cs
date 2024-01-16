@@ -214,8 +214,6 @@ class MySqlTable
 
 						var mime = FileType.GetMimeFromBytes((byte[])reader.GetValue(i), "image/png");
 
-						if (ext == "x-png")
-							ext = "png";
 						var ext = NormalFileType(mime.Split("/")[1]);
 
 						line += $"load_file(\"{save_byteA2folder}/{table}/{icolumn}.{ext}\")";
