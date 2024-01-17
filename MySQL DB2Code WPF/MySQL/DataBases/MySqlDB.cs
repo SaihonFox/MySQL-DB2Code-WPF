@@ -1,5 +1,4 @@
 ﻿using System.Data;
-using System.Windows;
 using MySql.Data.MySqlClient;
 
 namespace MySQL_DB2Code_WPF.MySQL.DataBases;
