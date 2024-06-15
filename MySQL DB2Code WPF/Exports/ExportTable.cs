@@ -16,7 +16,7 @@ class ExportTable
 		this.connection = connection;
 	}
 
-	async Task<string> Export()
+	string Export()
 	{
 		var types = new List<string>();
 

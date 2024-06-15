@@ -1,10 +1,5 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Data;
+﻿using System.Data;
 using System.IO;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Data;
@@ -23,7 +18,7 @@ class Methods
 	public Methods(MainWindow mWindow)
 	{
 		this.mWindow = mWindow;
-		connection = mWindow.connection;
+		connection = mWindow.connection!;
 	}
 
 	public async Task<List<string>> GetDBList(MySqlConnection con)
@@ -43,7 +38,7 @@ class Methods
 				list.Add(reader.GetString(i));
 		}
 
-		reader.Close();
+		await reader.CloseAsync();
 
 		return list;
 	}
@@ -74,6 +69,8 @@ class Methods
 
 	public async Task<List<string>> GetUserServer()
 	{
+		if (!File.Exists("user@server list.txt"))
+			await File.WriteAllTextAsync("user@server list.txt", "");
 		var lines = await File.ReadAllLinesAsync("user@server list.txt");
 		return lines.Where(l => mWindow.MyRegex().IsMatch(l)).ToList();
 	}
@@ -224,7 +221,7 @@ class Methods
 	public async Task SetTableList()
 	{
 		var table = (string)mWindow.tablelist_lb.SelectedItem;
-		var headers = await GetTableColumns(mWindow.selected_table);
+		var headers = await GetTableColumns(mWindow.selected_table!);
 
 		{
 			var gh1 = new GridView();

@@ -9,9 +9,15 @@ using MySQL_DB2Code_WPF.MySQL.DataBases;
 
 namespace MySQL_DB2Code_WPF.MySQL.Tables;
 
-class MySqlTable
+public static class MySqlTable
 {
-    static async Task Throw(MySqlConnection connection, string table)
+    static MySqlTable()
+    {
+		file_types.Add("x-png", "png");
+		file_types.Add("pjpeg", "jpeg");
+    }
+
+    static async Task Throw(this MySqlConnection connection, string table)
     {
         if (!await connection.PingAsync())
             throw new Exception("connection was not opened");
@@ -19,10 +25,10 @@ class MySqlTable
         ArgumentException.ThrowIfNullOrWhiteSpace(table);
     }
 
-    public static async Task<bool> ContainsColumns(MySqlConnection connection, string table) =>
+    public static async ValueTask<bool> ContainsColumns(this MySqlConnection connection, string table) =>
 	    (await GetColumnsName(connection, table)).Count > 0;
 
-    public static async Task<IReadOnlyList<string>> GetColumnsName(MySqlConnection connection, string table)
+    public static async ValueTask<IReadOnlyList<string>> GetColumnsName(this MySqlConnection connection, string table)
     {
         await Throw(connection, table);
 
@@ -38,7 +44,7 @@ class MySqlTable
         return list;
     }
 
-    public static async Task<IReadOnlyList<MySqlTableKeys>> GetColumnsKeys(MySqlConnection connection, string table)
+    public static async ValueTask<IReadOnlyList<MySqlTableKeys>> GetColumnsKeys(this MySqlConnection connection, string table)
     {
         await Throw(connection, table);
 
@@ -53,7 +59,7 @@ class MySqlTable
         return list;
     }
 
-    public static async Task<IReadOnlyList<string>> GetColumnsType(MySqlConnection connection, string table)
+    public static async ValueTask<IReadOnlyList<string>> GetColumnsType(this MySqlConnection connection, string table)
     {
         await Throw(connection, table);
 
@@ -70,14 +76,14 @@ class MySqlTable
         return list;
 	}
 
-    public static async Task<DbDataReader?> GetReader(MySqlConnection connection, string table)
+    public static async ValueTask<DbDataReader?> GetReader(this MySqlConnection connection, string table)
     {
 	    await using var command = connection!.CreateCommand();
 	    command.CommandText = $"select * from `{connection.Database}`.`{table}`";
 	    return await command.ExecuteReaderAsync();
     }
 
-	public static async Task<DataTable?> GetSchemaTable(MySqlConnection connection, string table)
+	public static async ValueTask<DataTable?> GetSchemaTable(this MySqlConnection connection, string table)
     {
 	    await using var command = connection!.CreateCommand();
 	    command.CommandText = $"select * from `{connection.Database}`.`{table}`";
@@ -85,7 +91,7 @@ class MySqlTable
 	    return await reader.GetSchemaTableAsync();
 	}
 
-    public static async Task<IReadOnlyList<DbColumn>> GetColumnSchema(MySqlConnection connection, string table)
+    public static async ValueTask<IReadOnlyList<DbColumn>> GetColumnSchema(this MySqlConnection connection, string table)
     {
 	    await using var command = connection!.CreateCommand();
 	    command.CommandText = $"select * from `{connection.Database}`.`{table}`";
@@ -95,7 +101,7 @@ class MySqlTable
 
 	public static Action? OnTableDropped;
 
-    public static async Task<int> DropTable(MySqlConnection connection, string table)
+    public static async ValueTask<int> DropTable(this MySqlConnection connection, string table)
     {
 	    await Throw(connection, table);
 
@@ -125,7 +131,7 @@ class MySqlTable
 	    }
     }
 
-    public static async Task<int> DropAlterTable(MySqlConnection connection, string table)
+    public static async ValueTask<int> DropAlterTable(this MySqlConnection connection, string table)
     {
 	    await Throw(connection, table);
 
@@ -135,6 +141,7 @@ class MySqlTable
 		    command.CommandText =
 			    $"alter table `{constraint.TABLE_SCHEMA}`.`{constraint.TABLE_NAME}` drop foreign key `{constraint.CONSTRAINT_NAME}`";
 		    await command.ExecuteNonQueryAsync();
+			await command.DisposeAsync();
 	    }
 
 		await using var command2 = connection.CreateCommand();
@@ -148,17 +155,17 @@ class MySqlTable
 
     public static string? save_byteA2folder = null;
 
-    public static async Task<string> ExportTable(MySqlConnection connection, string table)
+    public static async ValueTask<string> ExportTable(this MySqlConnection connection, string table)
     {
 	    await Throw(connection, table);
 
 	    var sb = new StringBuilder($"create table `{table}` (\n");
 
-	    var columns = await GetColumnsName(connection, table);
-	    var types = await GetColumnsType(connection, table);
-	    var keys = await GetColumnsKeys(connection, table);
+	    var columns = await connection.GetColumnsName(table);
+	    var types = await connection.GetColumnsType(table);
+	    var keys = await connection.GetColumnsKeys(table);
 	    var constraints = await MySqlDB.GetConstraints4Table(connection, table);
-	    var column_schema = await GetColumnSchema(connection, table);
+	    var column_schema = await connection.GetColumnSchema(table);
 
 	    for (int i = 0; i < columns.Count; i++)
 	    {
@@ -248,6 +255,7 @@ class MySqlTable
 
 			values_lines.Add(line);
 	    }
+		await reader.CloseAsync();
 
 	    sb.Append(string.Join(",\n", values_lines));
 	    sb.AppendLine(";");
@@ -263,13 +271,14 @@ class MySqlTable
 	    return type;
     }
 
+
+	
+	static Dictionary<string, string> file_types = new Dictionary<string, string>();
+
 	static string NormalFileType(string type)
 	{
-		return type switch
-		{
-			"x-png" => "png",
-			"pjpeg" => "jpeg",
-			_ => type
-		};
+		if (file_types.ContainsKey(type))
+			return file_types[type];
+		return type;
 	}
 }

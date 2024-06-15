@@ -19,7 +19,7 @@ public partial class MainWindow : Window
 
 	private string? server;
 	private string? user;
-	private string password;
+	private string password = string.Empty;
 
 	public string? selected_table = null;
 
@@ -111,6 +111,20 @@ public partial class MainWindow : Window
 		tablename_tb.Text = selected_table = (string) tablelist_lb.SelectedValue;
 		await m.GetConstraints();
 		await m.SetTableList();
+
+
+
+		/// describing table
+		/*using var command = connection.CreateCommand();
+		command.CommandText = $"describe {selected_table}";
+		MessageBox.Show(command.CommandText);
+		var reader = await command.ExecuteReaderAsync();
+		while(await reader.ReadAsync())
+		{
+			var tr = reader.GetTextReader("type");
+			MessageBox.Show(tr.ReadLine() ?? "null");
+		}
+		await reader.CloseAsync();*/
 	}
 
 	async void user0server_cb_SelectionChanged(object sender, SelectionChangedEventArgs e)

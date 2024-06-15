@@ -5,12 +5,13 @@ namespace MySQL_DB2Code_WPF.MySQL.DataBases;
 
 class MySqlDB
 {
-	static async Task Throw(MySqlConnection connection, string table)
+	static Task Throw(MySqlConnection connection, string table)
 	{
 		if (connection.State != ConnectionState.Open)
 			throw new Exception("connection was not opened");
 		ArgumentException.ThrowIfNullOrWhiteSpace(connection.Database);
 		ArgumentException.ThrowIfNullOrWhiteSpace(table);
+		return Task.CompletedTask;
 	}
 
 	public static async Task<IReadOnlyList<MySqlDBConstraints>> GetConstraints(MySqlConnection connection)
@@ -84,15 +85,15 @@ class MySqlDB
 				while (await reader.ReadAsync())
 					list.Add(reader.GetString(0));
 
-				reader.Close();
-				reader.Dispose();
+				await reader.CloseAsync();
+				await reader.DisposeAsync();
 			} catch {}
 		}
 
 		return list;
 	}
 
-	public static Action OnDBDropped;
+	public static Action? OnDBDropped;
 
 	public static async Task<int> DropDB(MySqlConnection connection)
 	{

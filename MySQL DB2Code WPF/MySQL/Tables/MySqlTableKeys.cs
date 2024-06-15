@@ -2,7 +2,7 @@
 
 namespace MySQL_DB2Code_WPF.MySQL.Tables;
 
-internal class MySqlTableKeys(IDataRecord reader)
+public class MySqlTableKeys(IDataRecord reader)
 {
     public string? Table { get; init; } = (string)reader[nameof(Table)];
     public bool? Non_unique { get; init; } = bool.Parse(reader[nameof(Non_unique)].ToString()!.Equals("1") ? "true" : "false");
